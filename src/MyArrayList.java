@@ -12,12 +12,12 @@ public class MyArrayList<T> implements MyList<T>{
 
     public MyArrayList(){
         element_data=new Object[default_capacity];
-
+        capacity = default_capacity;
     }
     public MyArrayList(int initialCapacity){
         if(initialCapacity==0){
+            capacity=0;
             element_data=empty_data;
-            capacity=default_capacity;
         }
         else if(initialCapacity>0){
             element_data=new Object[initialCapacity];
@@ -33,15 +33,21 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public void add(T item) {
-        if(size >= capacity){
+        if(element_data.length==size+1){
             increaseCapacity();
+
         }
+
         element_data[size]=item;
         size++;
     }
     public void increaseCapacity(){
-        element_data=new Object[capacity*2];
-        capacity = capacity *2;
+        capacity = capacity+1;
+        Object[] temp = new Object[capacity];
+        for(int i=0;i<size;i++){
+            temp[i]=element_data[i];
+        }
+        element_data=temp;
     }
 
 
@@ -51,28 +57,32 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public void set(int index, T item) {
-
+        element_data[index]= item;
     }
 
     @Override
     public void add(int index, T item) {
-
+        element_data[index]=item;
+        size++;
     }
 
     @Override
     public void addFirst(T item) {
+        if(size >= capacity){
+            increaseCapacity();
+        }
         Object[] temp = new Object[element_data.length+1];
         temp[0]= item;
         for(int i=1;i<element_data.length;i++){
             temp[i]=element_data[i-1];
         }
         element_data=temp;
-
+        size++;
     }
 
     @Override
     public void addLast(T item) {
-
+        add(item);
     }
 
     @Override
@@ -90,22 +100,45 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public T getLast() {
-        return (T) element_data[size];
+        return (T) element_data[size-1];
     }
 
     @Override
     public void remove(int index) {
 
+        Object[] temp = new Object[element_data.length];
+
+        for(int i =0; i< index;i++){
+            temp[i] = element_data[i];
+        }
+
+        for(int i=index ;i<size-1;i++){
+            temp[i]=element_data[i+1];
+        }
+        size--;
+        element_data=temp;
+
     }
 
     @Override
     public void removeFirst() {
+        Object[] temp = new Object[size-1];
 
+        for(int i=0;i<size-1;i++){
+            temp[i]=element_data[i+1];
+        }
+        element_data=temp;
+        size--;
     }
 
     @Override
     public void removeLast() {
-
+        Object[] temp = new Object[size-1];
+        for(int i =0 ;i<size-1;i++){
+            temp[i]=element_data[i];
+        }
+        element_data =temp ;
+        size--;
     }
 
     @Override
@@ -115,12 +148,22 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public int indexOf(Object object) {
-        return 0;
+        for(int i=0;i<size;i++){
+            if(element_data[i]==object){
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     public int lastIndexOf(Object object) {
-        return 0;
+        for(int i = size; i>=0; i--) {
+            if (element_data[i] == object) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -135,18 +178,30 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public void clear() {
-
+        Object[] temp = new Object[default_capacity];
+        element_data=temp;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return iterator();
+        return new MyIterator();
     }
 
+    public class MyIterator implements Iterator<T>{
+        private int index =0;
+        @Override
+        public boolean hasNext() {
+            return index<size;
+        }
 
+        @Override
+        public T next() {
+            return (T) element_data[index++];
+        }
+    }
 }

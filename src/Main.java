@@ -12,8 +12,7 @@ public class Main {
         for(int i=0;i<20;i++){
             b[i]=i;
         }
-        arr.add()
-        arr.add(a);
+
         System.out.println(arr.indexOf(4));
 
 

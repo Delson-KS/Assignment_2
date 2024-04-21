@@ -1,6 +1,9 @@
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 
-public class MyArrayList<T> implements MyList<T>{
+public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
 
     private static final int default_capacity = 10;
 
@@ -35,7 +38,6 @@ public class MyArrayList<T> implements MyList<T>{
     public void add(T item) {
         if(element_data.length==size+1){
             increaseCapacity();
-
         }
 
         element_data[size]=item;
@@ -57,11 +59,14 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public void set(int index, T item) {
-        element_data[index]= item;
+        element_data[index] = item;
     }
 
     @Override
     public void add(int index, T item) {
+        if(element_data.length==size+1){
+            increaseCapacity();
+        }
         element_data[index]=item;
         size++;
     }
@@ -117,7 +122,6 @@ public class MyArrayList<T> implements MyList<T>{
         }
         size--;
         element_data=temp;
-
     }
 
     @Override
@@ -143,13 +147,21 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public void sort() {
-
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (((Comparable)element_data[j]).compareTo(element_data[j+1]) < 0) {
+                    Object temp = element_data[j];
+                    element_data[j] = element_data[j+1];
+                    element_data[j+1] = temp;
+                }
+            }
+        }
     }
 
     @Override
     public int indexOf(Object object) {
         for(int i=0;i<size;i++){
-            if(element_data[i]==object){
+            if(element_data[i].equals(object)){
                 return i;
             }
         }
@@ -168,12 +180,19 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public boolean exists(Object object) {
-        return false;
+        int check=0;
+        for(int i=0;i<size;i++){
+            if(element_data[i].equals(object)){
+                check++;
+            }
+        }
+
+        return check>0;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        return Arrays.copyOf(element_data, size);
     }
 
     @Override
@@ -184,7 +203,7 @@ public class MyArrayList<T> implements MyList<T>{
 
     @Override
     public int size() {
-        return size;
+        return size+1;
     }
 
     @Override

@@ -1,110 +1,130 @@
+import java.lang.reflect.Member;
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
+import java.util.NoSuchElementException;
 
-public class MyLinkedList<T extends Comparable<T>> implements MyList<T>{
-    private class MyNode<E>{
-        E data;
-        MyNode next ;
-        MyNode prev ;
-        MyNode head ;
-        MyNode(E data){
-            this.prev=null;
-            this.next=null;
-            this.data=data;
+class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList{
+
+    private class Node<D>{
+        D data;
+        Node next;
+        Node prev;
+        Node(D data){
+            this.data = data;
+            next=null;
+            prev=null;
         }
-        MyNode(MyNode prev,MyNode next, E data){
-            this.data=data;
-            this.next=next;
-            this.prev=prev;
+        Node(D data,Node next,Node prev){
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
         }
     }
-    MyNode head;
-    MyNode tail;
-    private int size=0;
+    private Node head;
+    private Node tail;
     MyLinkedList(){
-        this.head=null;
-        this.tail=null;
+        head=null;
+        tail=null;
+        size=0;
     }
-
+    private int size;
     @Override
-      public void add(T item) {
-        MyNode newNode = new MyNode(item);
+    public void add(Object item) {
+        Node node = new Node(item);
+
         if(head==null){
-            head=newNode;
-            tail=newNode;
+            head=node;
+            tail=node;
         }
         else{
-            tail.next = newNode;
+            tail.next=node;
             tail.prev=tail;
-            tail=newNode;
-            newNode.next=null;
+            tail=node;
         }
         size++;
     }
 
     @Override
-    public void set(int index, T item) {
-        MyNode node = new MyNode(item);
-        MyNode newHead=head;
-        for(int i=0;i<index-1;i++){
-            newHead=newHead.next;
+    public void set(int index, Object item) {
+        index_check(index,size);
+        Node current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
         }
-        newHead.data=item;
+        current.data = item;
+    }
+
+
+    @Override
+    public void add(int index, Object item) {
+        Node node = new Node(item);
+        if(index==0){
+            node.next=head;
+            head=node;
+        }
+        else if(index==size-1){
+            tail.next=node;
+            tail.prev=tail;
+            tail=node;
+        }
+        else{
+            Node current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+            node.next = current.next;
+            node.prev = current;
+            current.next.prev = node;
+            current.next = node;
+        }
+        size++;
     }
 
     @Override
-    public void add(int index, T item) {
-        MyNode node = new MyNode(item);
-        MyNode newHead=head;
-        for(int i=0;i<index-1;i++){
-            newHead=newHead.next;
-        }
-        newHead.next=node;
-        node.next=newHead.next.next;
-        node.prev=newHead;
-
-    }
-
-    @Override
-    public void addFirst(T item) {
-        MyNode node = new MyNode(item);
-        MyNode current = head;
-        current.prev=node;
-        node.next=current;
+    public void addFirst(Object item) {
+        Node node = new Node(item);
+        node.next=head;
         head=node;
         size++;
     }
 
     @Override
-    public void addLast(T item) {
-        add(item);
-
-
+    public void addLast(Object item) {
+        Node node = new Node(item);
+        tail.next=node;
+        tail.prev=tail;
+        tail=node;
+        size++;
     }
 
     @Override
-    public T get(int index) {
-        MyNode current=head;
-        for (int i = 0; i < index-1; i++) {
-            current = current.next;
+    public Object get(int index) {
+        index_check(index,size-1);
+        Node current=head;
+        if(index==0)
+            return head.data;
+        if(index==size-1)
+            return tail.data;
+        else {
+            for(int i=0;i<index;i++){
+                current=current.next;
+            }
         }
-
-        return (T) current.data;
+        return current.data;
     }
 
     @Override
-    public T getFirst() {
-        return (T) head.data;
+    public Object getFirst() {
+        return head.data;
     }
 
     @Override
-    public T getLast() {
-        return(T) tail.data;
+    public Object getLast() {
+        return tail.data;
     }
 
     @Override
     public void remove(int index) {
+        index_check(index,size);
         if (index == 0) {
             head = head.next;
             head.prev = null;
@@ -114,7 +134,7 @@ public class MyLinkedList<T extends Comparable<T>> implements MyList<T>{
             tail.next = null;
         }
         else {
-            MyNode current = head;
+            Node current = head;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
@@ -126,20 +146,12 @@ public class MyLinkedList<T extends Comparable<T>> implements MyList<T>{
 
     @Override
     public void removeFirst() {
-        if(head==null || head.next==null){
-            head=null;
-            return;
-        }
-        head=head.next;
-        head.prev=null;
-
-
-        size = size-1;
+        remove(0);
     }
 
     @Override
     public void removeLast() {
-
+        remove(size-1);
     }
 
     @Override
@@ -149,7 +161,7 @@ public class MyLinkedList<T extends Comparable<T>> implements MyList<T>{
 
     @Override
     public int indexOf(Object object) {
-        MyNode current = head;
+        Node current = head;
         for (int i = 0; i < size; i++) {
             if (current.data.equals(object)) {
                 return i;
@@ -157,54 +169,78 @@ public class MyLinkedList<T extends Comparable<T>> implements MyList<T>{
             current = current.next;
         }
         return -1;
+
     }
 
     @Override
     public int lastIndexOf(Object object) {
-        return 0;
+        Node current = tail;
+        for (int i = size - 1; i >= 0; i--) {
+            if (current.data.equals(object)) {
+                return i;
+            }
+            current = current.prev;
+        }
+        return -1;
     }
 
     @Override
     public boolean exists(Object object) {
-        MyNode current = head;
-        while (current.next != null) {
-            if (current.data.equals(object)) {
+        Node current = head;
+        for(int i=0;i<size;i++){
+            if(current.data.equals(object)){
                 return true;
             }
-            else
-                current= current.next;
+            current=current.next;
         }
         return false;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] arr = new Object[size];
+        Node current = head;
+        for (int i=0;i<size;i++){
+            arr[i]=current.data;
+            current=current.next;
+        }
+        return arr;
     }
 
     @Override
     public void clear() {
-
+        head=null;
+        tail=null;
+        size=0;
     }
 
     @Override
     public int size() {
-        return size+1;
+        return size;
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return null;
+    public Iterator iterator() {
+        return new MyIterator();
     }
+    public class MyIterator implements Iterator<T> {
+        private Node current = head;
+        private int index = 0;
 
-    @Override
-    public void forEach(Consumer<? super T> action) {
-        MyList.super.forEach(action);
+        @Override
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        @Override
+        public T next() {
+            if (hasNext() != true) {
+                throw new NoSuchElementException();
+            }
+            T element = (T) current.data;
+            current = current.next;
+            index++;
+            return element;
+        }
     }
-
-    @Override
-    public Spliterator<T> spliterator() {
-        return MyList.super.spliterator();
-    }
-
 }

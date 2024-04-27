@@ -12,11 +12,12 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
     private static int size=0;
     private int capacity ;
 
-
+    //constructor without parameters
     public MyArrayList(){
         element_data=new Object[default_capacity];
         capacity = default_capacity;
     }
+    //constructor with 1 parameter
     public MyArrayList(int initialCapacity){
         if(initialCapacity==0){
             capacity=0;
@@ -35,7 +36,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
 
 
     @Override
-    public void add(T item) {
+    public void add(T item) { //insert function
         if(element_data.length==size+1){
             increaseCapacity();
         }
@@ -43,7 +44,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         element_data[size]=item;
         size++;
     }
-    public void increaseCapacity(){
+    public void increaseCapacity(){//increase capacity if there no empty slots
         capacity = capacity+1;
         Object[] temp = new Object[capacity];
         for(int i=0;i<size;i++){
@@ -60,7 +61,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
     @Override
     public void set(int index, T item) {
         element_data[index] = item;
-    }
+    }//set data into index
 
     @Override
     public void add(int index, T item) {
@@ -69,7 +70,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
         element_data[index]=item;
         size++;
-    }
+    }//set data into index
 
     @Override
     public void addFirst(T item) {
@@ -83,12 +84,12 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
         element_data=temp;
         size++;
-    }
+    } // insert data as first element
 
     @Override
     public void addLast(T item) {
         add(item);
-    }
+    }//insert data as last element
 
     @Override
     public T get(int index) {
@@ -96,17 +97,17 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
             System.out.println("out of length");
         }
         return (T) element_data[index];
-    }
+    }//return data on index
 
     @Override
     public T getFirst() {
         return (T) element_data[0];
-    }
+    } // return data of first element
 
     @Override
     public T getLast() {
         return (T) element_data[size-1];
-    }
+    }//return data of last element
 
     @Override
     public void remove(int index) {
@@ -122,7 +123,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
         size--;
         element_data=temp;
-    }
+    }//delete data from index
 
     @Override
     public void removeFirst() {
@@ -133,7 +134,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
         element_data=temp;
         size--;
-    }
+    }//delete first element
 
     @Override
     public void removeLast() {
@@ -143,7 +144,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
         element_data =temp ;
         size--;
-    }
+    }//delete last element
 
     @Override
     public void sort() {
@@ -156,7 +157,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
                 }
             }
         }
-    }
+    }//sorting function
 
     @Override
     public int indexOf(Object object) {
@@ -166,7 +167,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
             }
         }
         return -1;
-    }
+    }//function that checks index of data(if exist)
 
     @Override
     public int lastIndexOf(Object object) {
@@ -176,7 +177,7 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
             }
         }
         return -1;
-    }
+    }//function that checks last index of data(if exist)
 
     @Override
     public boolean exists(Object object) {
@@ -188,23 +189,23 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
         }
 
         return check>0;
-    }
+    }//check to existing
 
     @Override
     public Object[] toArray() {
         return Arrays.copyOf(element_data, size);
-    }
+    }//return as array
 
     @Override
     public void clear() {
         Object[] temp = new Object[default_capacity];
         element_data=temp;
-    }
+    }//delete all data
 
     @Override
     public int size() {
         return size+1;
-    }
+    }//return size
 
     @Override
     public Iterator<T> iterator() {

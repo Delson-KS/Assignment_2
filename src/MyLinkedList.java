@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList{
-
+    //class of node that have two references next and previous with data reference
     private class Node<D>{
         D data;
         Node next;
@@ -19,16 +19,20 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
             this.prev = prev;
         }
     }
-    private Node head;
-    private Node tail;
+    private Node head;//first element
+    private Node tail;//last element
+
+    //constructor for doubly linked list without any parameters
     MyLinkedList(){
         head=null;
         tail=null;
         size=0;
     }
+
+    //number of elements in linked list
     private int size;
     @Override
-    public void add(Object item) {
+    public void add(Object item) { //add data in list by creating new node
         Node node = new Node(item);
 
         if(head==null){
@@ -44,7 +48,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public void set(int index, Object item) {
+    public void set(int index, Object item) { // set node(data) into index
         index_check(index,size);
         Node current = head;
         for (int i = 0; i < index; i++) {
@@ -55,7 +59,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
 
 
     @Override
-    public void add(int index, Object item) {
+    public void add(int index, Object item) { //add node(data) into index
         Node node = new Node(item);
         if(index==0){
             node.next=head;
@@ -80,7 +84,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public void addFirst(Object item) {
+    public void addFirst(Object item) { // add to beginning data as head
         Node node = new Node(item);
         node.next=head;
         head=node;
@@ -88,7 +92,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public void addLast(Object item) {
+    public void addLast(Object item) { //add data to end as tail
         Node node = new Node(item);
         tail.next=node;
         tail.prev=tail;
@@ -97,7 +101,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public Object get(int index) {
+    public Object get(int index) {//return data in node
         index_check(index,size-1);
         Node current=head;
         if(index==0)
@@ -113,17 +117,17 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public Object getFirst() {
+    public Object getFirst() {//return data of first node
         return head.data;
     }
 
     @Override
-    public Object getLast() {
+    public Object getLast() {//return data of last node
         return tail.data;
     }
 
     @Override
-    public void remove(int index) {
+    public void remove(int index) {//delete node on index
         index_check(index,size);
         if (index == 0) {
             head = head.next;
@@ -145,12 +149,12 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public void removeFirst() {
+    public void removeFirst() {//delete first node
         remove(0);
     }
 
     @Override
-    public void removeLast() {
+    public void removeLast() {//delete last node
         remove(size-1);
     }
 
@@ -160,7 +164,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public int indexOf(Object object) {
+    public int indexOf(Object object) { // return index of data if exist
         Node current = head;
         for (int i = 0; i < size; i++) {
             if (current.data.equals(object)) {
@@ -173,7 +177,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public int lastIndexOf(Object object) {
+    public int lastIndexOf(Object object) {//return last index of data if exist
         Node current = tail;
         for (int i = size - 1; i >= 0; i--) {
             if (current.data.equals(object)) {
@@ -185,7 +189,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public boolean exists(Object object) {
+    public boolean exists(Object object) { // function to check existing data
         Node current = head;
         for(int i=0;i<size;i++){
             if(current.data.equals(object)){
@@ -197,7 +201,7 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public Object[] toArray() {
+    public Object[] toArray() { // return as arr
         Object[] arr = new Object[size];
         Node current = head;
         for (int i=0;i<size;i++){
@@ -208,19 +212,19 @@ class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList
     }
 
     @Override
-    public void clear() {
+    public void clear() { // delete all nodes from list
         head=null;
         tail=null;
         size=0;
     }
 
     @Override
-    public int size() {
+    public int size() { // return number of node
         return size;
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator iterator() { // iterator
         return new MyIterator();
     }
     public class MyIterator implements Iterator<T> {

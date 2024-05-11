@@ -1,3 +1,6 @@
+package asik2;
+
+import asik2.MyLinkedList;
 
 public class Stack {
     public class MyStack<T extends Comparable<T>> {

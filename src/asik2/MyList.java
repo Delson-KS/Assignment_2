@@ -1,3 +1,5 @@
+package asik2;
+
 public interface MyList<T> extends Iterable<T>{
     void add(T item);
     void set(int index,T item);

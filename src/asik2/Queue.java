@@ -1,5 +1,9 @@
+package asik2;
+
+import asik2.MyArrayList;
+
 public class Queue {
-    public class MyQueue<T extends Comparable<T>> {
+    public static class MyQueue<T extends Comparable<T>> {
         MyArrayList<T> queue = new MyArrayList<>();
         public MyQueue() { // empty constructor
         }

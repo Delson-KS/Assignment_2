@@ -1,9 +1,11 @@
+package asik2;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class MyArrayList<T extends Comparable<T>> implements MyList<T>{
+public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
 
     private static final int default_capacity = 10;
 

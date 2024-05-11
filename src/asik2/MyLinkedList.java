@@ -1,8 +1,11 @@
-import java.lang.reflect.Member;
+package asik2;
+
+import asik2.check_Index;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList{
+class MyLinkedList<T extends Comparable<T>>extends check_Index implements MyList {
     //class of node that have two references next and previous with data reference
     private class Node<D>{
         D data;
